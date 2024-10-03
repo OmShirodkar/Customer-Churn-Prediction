@@ -46,22 +46,27 @@ df[['Tenure', 'MonthlyCharges', 'TotalCharges']] = scaler.fit_transform(df[['Ten
 Churn Distribution: Visualize the distribution of churned vs non-churned customers.
 Correlation Analysis: Understand how features correlate with churn using a heatmap.
 Data Visualization: Use histograms, box plots, and scatter plots to explore relationships.
+The distribution of churn and non-churn customers is visualised below. The plot shows that 26.6% of the customers churned.
+
+The heatmap below reveals strong correlations between "Tenure" and "Churn", and moderate correlations between "Monthly Charges" and "Churn."
+
 Code Example:
-python
-Copy code
+python code
 sns.countplot(x='Churn', data=df)
 sns.heatmap(df.corr(), annot=True)
+
 
 
 6.3 Feature Engineering
 Feature Importance: Identify key features that impact churn using models like Random Forest. This helps in understanding which variables (such as tenure, monthly charges) are significant.
 Feature Selection: Remove irrelevant features and select only the most important ones.
 Code Example:
-python
-Copy code
-model = RandomForestClassifier()
-model.fit(X, y)
-feature_importances = pd.DataFrame(model.feature_importances_, index=X.columns, columns=['importance']).sort_values('importance', ascending=False)
+python code
+	def distplot(feature, frame, color='r'):
+    plt.figure(figsize=(8,3))
+    plt.title("Distribution for {}".format(feature))
+    ax = sns.distplot(frame[feature], color= color)
+
 
 
 6.4 Model Building
@@ -82,11 +87,17 @@ Cross-Validation: Perform k-fold cross-validation to ensure the model is not ove
 ROC Curve: Plot the Receiver Operating Characteristic (ROC) curve to evaluate how well the model distinguishes between classes.
 Confusion Matrix: Analyze the model’s performance by examining false positives and false negatives.
 Code Example:
-python
-Copy code
-y_pred_prob = xgb_model.predict_proba(X_test)[:, 1]
-fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
-roc_auc = auc(fpr, tpr)
+python code
+y_pred_prob = lr_model.predict_proba(X_test)[:,1]
+fpr, tpr, thresholds = roc_curve(y_test, y_pred_prob)
+plt.plot([0, 1], [0, 1], 'k--' )
+plt.plot(fpr, tpr, label='Logistic Regression',color = "r")
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Logistic Regression ROC Curve',fontsize=16)
+plt.show();
+
+
 
 
 6.6 Actionable Insights
@@ -97,16 +108,10 @@ Offer Discounts: Offer personalized promotions to retain customers predicted to 
 Loyalty Programs: Implement loyalty programs for customers with high monthly charges.
 
 7. Conclusion
-This project demonstrates how predictive analytics can be used to reduce customer churn in a subscription-based business.
-Future Work:
-Explore additional algorithms like deep learning.
-Implement real-time churn prediction.
-Deploy the model in a production environment.
-
+This project demonstrates how predictive analytics can be used to reduce customer churn 
 8. Real-Time Examples of Subscription-based Businesses
 Streaming Services: Netflix, Spotify.
 SaaS Platforms: Microsoft Office 365, Salesforce.
-Subscription Boxes: Birchbox, Blue Apron.
 
 9. Other Possible Analytics
 Customer Segmentation: Using clustering techniques to identify customer groups.
